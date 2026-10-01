@@ -2,6 +2,7 @@ import os
 os.environ['SDL_VIDEODRIVER'] = 'dummy'
 os.environ['SDL_AUDIODRIVER'] = 'dummy'
 import unittest
+from unittest.mock import Mock, patch
 import pygame
 from game.snake import Snake
 from game.food import Food
@@ -83,6 +84,25 @@ class GameTests(unittest.TestCase):
             engine.food.x, engine.food.y = (0, 0)
             engine.update(0.5)
             self.assertEqual(engine.snake.body[0], (15 + speed // 2, 15))
+
+    def test_sound_events_once(self):
+        engine = GameEngine(600, 600)
+        self.assertEqual(set(engine.sounds), {"eat", "game_over"})
+        engine.sounds = {"eat": Mock(), "game_over": Mock()}
+        engine.food.x, engine.food.y = (16, 15)
+        engine.update(0.125)
+        engine.sounds["eat"].play.assert_called_once()
+        engine.snake.body = [(29, 5), (28, 5), (27, 5)]
+        engine.update(0.125)
+        engine.update(1)
+        engine.sounds["game_over"].play.assert_called_once()
+
+    def test_no_audio_device(self):
+        with patch('pygame.mixer.get_init', return_value=None), patch('pygame.mixer.init', side_effect=pygame.error('No audio device')):
+            engine = GameEngine(600, 600)
+            engine.update(0.125)
+            engine.finish_game()
+            self.assertTrue(engine.game_over)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,3 +1,4 @@
+from pathlib import Path
 import pygame
 from .snake import Snake
 from .food import Food
@@ -19,7 +20,26 @@ class GameEngine:
         self.font = pygame.font.SysFont("Arial", 30)
         self.small_font = pygame.font.SysFont("Arial", 22)
         self.quit_requested = False
+        self.sounds = {}
+        try:
+            if not pygame.mixer.get_init():
+                pygame.mixer.init()
+            assets = Path(__file__).resolve().parent.parent / "assets"
+            self.sounds = {name: pygame.mixer.Sound(str(assets / f"{name}.wav"))
+                           for name in ("eat", "game_over")}
+        except (pygame.error, OSError):
+            # Audio is optional on computers without a working sound device.
+            print("Sound unavailable; continuing without audio.")
         self.reset("Easy")
+
+    def play_sound(self, name):
+        if name in self.sounds:
+            self.sounds[name].play()
+
+    def finish_game(self):
+        if not self.game_over:
+            self.game_over = True
+            self.play_sound("game_over")
 
     def reset(self, difficulty):
         self.difficulty = difficulty
@@ -74,17 +94,18 @@ class GameEngine:
         self.snake.move()
 
         if self.snake.collides_with_wall(self.grid_width, self.grid_height):
-            self.game_over = True
+            self.finish_game()
             return
 
         if self.snake.collides_with_self():
-            self.game_over = True
+            self.finish_game()
             return
 
         if eating:
             self.score += 1
+            self.play_sound("eat")
             if not self.food.respawn(self.snake.body):
-                self.game_over = True
+                self.finish_game()
 
     def render(self, screen):
         # Draw food

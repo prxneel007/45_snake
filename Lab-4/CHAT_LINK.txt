@@ -1,0 +1,3 @@
+Pending: add the real shared link to this conversation before submission.
+The assistant does not have an API for creating this conversation's share link.
+Chat_History.pdf contains the user-facing transcript through the packaging checkpoint.

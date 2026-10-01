@@ -1,0 +1,55 @@
+User
+https://github.com/SETAPESU26/45_snake
+
+I need you to complete my Lab 4: VibeCoding assignment end-to-end using my connected GitHub account.
+
+ASSIGNMENT OBJECTIVE:
+Use Vibe Coding tools to fix broken Python code and add all required features listed in the repository README. The final work must be pushed to my personal GitHub repository with separate commits for each task.
+
+ASSIGNED REPOSITORY:
+[PASTE ASSIGNED REPO LINK HERE]
+
+Please do the following:
+
+1. Open the assigned repository and carefully read the complete README.
+2. Identify:
+   - What the Python game/puzzle does
+   - What is currently broken
+   - Every feature/task required by the README
+   - Exact deliverables required
+3. Fork or clone the repository appropriately into my GitHub account. Do NOT raise a pull request to the original SETAPESU26 repository.
+4. Run the original Python program first and verify its current/broken state.
+5. Before changing anything, tell me exactly what I should show in my 10-second "before" video.
+6. Fix the broken code completely.
+7. Add EVERY feature mentioned in the README, one by one.
+8. Test the program after every meaningful change and make sure there are no errors.
+9. Keep the implementation simple, readable, and appropriate for a college lab assignment. Do not unnecessarily over-engineer it.
+10. Create
+
+Assistant
+I’ll read the repository and handout, then run the original game before making changes so I can tell you exactly what to record for the “before” video. Your message cuts off at “10. Create”; I’ll check the handout for the remaining deliverables.
+
+Assistant
+I’m using the PDF skill to check the handout. It requires a Lab-4 folder containing the updated code, two 10-second videos, and the chat history exported as a document or PDF, with separate commits for each task.
+
+Assistant
+The README has four tasks: fix unfair collisions, add a game-over screen, add replay with Easy/Medium/Hard speeds, and add eating/game-over sounds. I also found that the initial food can overlap the snake and growth happens one move late.
+
+For your 10-second before video, launch python main.py, show the snake moving right, then immediately press Left. The original code makes it collide with its own body and freeze; the final score appears only in the terminal. Keep the frozen window and terminal visible for the remaining seconds.
+
+Your connected account is prxneel007. I’ve cloned the original and will preserve it for recording.
+
+Assistant
+I reproduced the original reversal bug. The collision fix now passes five tests, including rapid key presses, moving into a cell the tail is leaving, wall/self collisions, immediate growth, and safe food placement. Task 1 is committed separately.
+
+I’m adding the game-over screen and replay controls next. The GitHub connector can edit existing repositories, but it has no create/fork action; I’ll finish the files and commits before resolving that publishing step.
+
+Assistant
+All four tasks now have separate commits, and all nine tests pass. Replay resets the score and snake at 8, 12, or 20 moves per second. Both sound effects are included, with a fallback for computers without audio.
+
+I’m preparing the submission folder and 10-second recordings using scripted key presses on the actual game. I’ll label those recordings as automated demos and include instructions for recording them yourself on your Mac.
+
+Assistant
+The recordings are exactly 10 seconds each. I checked the captured frames: the original freezes after reversal, while the updated game shows the final score and replays at the selected difficulty.
+
+I’m packaging the code, videos, run instructions, viva notes, and a chat transcript PDF under Lab-4. Two submission items still need access from your side: a personal destination repository and this conversation’s real share link.

@@ -7,13 +7,19 @@ class Snake:
         self.body = [(x, y), (x - 1, y), (x - 2, y)]
         self.direction = (1, 0)  # moving right
         self.grow_pending = False
+        self.turned_this_move = False
 
     def set_direction(self, dx, dy):
-        # NOTE: does not currently guard against reversing directly
-        # into the segment behind the head.
+        # Accept one perpendicular turn per move, even if keys arrive together.
+        if self.turned_this_move or (dx, dy) not in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            return
+        if (dx, dy) in (self.direction, (-self.direction[0], -self.direction[1])):
+            return
         self.direction = (dx, dy)
+        self.turned_this_move = True
 
     def move(self):
+        self.turned_this_move = False
         head_x, head_y = self.body[0]
         dx, dy = self.direction
         new_head = (head_x + dx, head_y + dy)

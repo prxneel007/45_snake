@@ -19,6 +19,8 @@ class GameEngine:
         self.snake = Snake(self.grid_width // 2, self.grid_height // 2, self.cell_size)
         self.food = Food(self.grid_width, self.grid_height, self.cell_size)
 
+        self.food.respawn(self.snake.body)
+
         self.score = 0
         self.font = pygame.font.SysFont("Arial", 30)
 
@@ -54,6 +56,11 @@ class GameEngine:
             return
         self._frame_counter = 0
 
+        head_x, head_y = self.snake.body[0]
+        dx, dy = self.snake.direction
+        eating = (head_x + dx, head_y + dy) == (self.food.x, self.food.y)
+        if eating:
+            self.snake.grow()
         self.snake.move()
 
         if self.snake.collides_with_wall(self.grid_width, self.grid_height):
@@ -64,10 +71,10 @@ class GameEngine:
             self.game_over = True
             return
 
-        if self.snake.head_rect().colliderect(self.food.rect()):
-            self.snake.grow()
+        if eating:
             self.score += 1
-            self.food.respawn(self.snake.body)
+            if not self.food.respawn(self.snake.body):
+                self.game_over = True
 
     def render(self, screen):
         # Draw food

@@ -52,7 +52,7 @@ class GameTests(unittest.TestCase):
     def test_eating_grows_immediately(self):
         engine = GameEngine(600, 600)
         engine.food.x, engine.food.y = (16, 15)
-        for _ in range(7): engine.update()
+        for _ in range(8): engine.update()
         self.assertEqual(engine.score, 1)
         self.assertEqual(len(engine.snake.body), 4)
         self.assertNotIn((engine.food.x, engine.food.y), engine.snake.body)
@@ -60,7 +60,7 @@ class GameTests(unittest.TestCase):
     def test_game_over_waits_and_quits(self):
         engine = GameEngine(600, 600)
         engine.snake.body = [(29, 5), (28, 5), (27, 5)]
-        for _ in range(7): engine.update()
+        for _ in range(8): engine.update()
         self.assertTrue(engine.game_over)
         body = engine.snake.body.copy()
         for _ in range(30): engine.update()
@@ -68,6 +68,21 @@ class GameTests(unittest.TestCase):
         engine.render(pygame.display.get_surface())
         engine.handle_keydown(pygame.K_q)
         self.assertTrue(engine.quit_requested)
+
+    def test_replay_all_difficulties(self):
+        engine = GameEngine(600, 600)
+        for key, name, speed in [(pygame.K_1, "Easy", 8), (pygame.K_2, "Medium", 12), (pygame.K_3, "Hard", 20)]:
+            engine.game_over = True
+            engine.score = 10
+            engine.handle_keydown(key)
+            self.assertFalse(engine.game_over)
+            self.assertEqual(engine.score, 0)
+            self.assertEqual(len(engine.snake.body), 3)
+            self.assertEqual(engine.difficulty, name)
+            self.assertEqual(engine.moves_per_second, speed)
+            engine.food.x, engine.food.y = (0, 0)
+            engine.update(0.5)
+            self.assertEqual(engine.snake.body[0], (15 + speed // 2, 15))
 
 if __name__ == '__main__':
     unittest.main()

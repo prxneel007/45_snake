@@ -23,6 +23,7 @@ engine = GameEngine(WIDTH, HEIGHT)
 def main():
     running = True
     while running:
+        dt = min(clock.tick(FPS) / 1000, 0.25)
         SCREEN.fill(BLACK)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,11 +34,10 @@ def main():
         if engine.quit_requested:
             running = False
         engine.handle_input()
-        engine.update()
+        engine.update(dt)
         engine.render(SCREEN)
 
         pygame.display.flip()
-        clock.tick(FPS)
 
     pygame.quit()
 

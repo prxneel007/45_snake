@@ -28,10 +28,16 @@ class GameEngine:
         self._frame_counter = 0
 
         self.game_over = False
-        self._game_over_logged = False
+        self.quit_requested = False
+        self.small_font = pygame.font.SysFont("Arial", 22)
 
     def handle_keydown(self, key):
-        # Direction changes are applied immediately on key press.
+        if key in (pygame.K_ESCAPE, pygame.K_q):
+            self.quit_requested = True
+            return
+        if self.game_over:
+            return
+        # Arrow keys and WASD use the same guarded direction change.
         if key in (pygame.K_UP, pygame.K_w):
             self.snake.set_direction(0, -1)
         elif key in (pygame.K_DOWN, pygame.K_s):
@@ -88,7 +94,13 @@ class GameEngine:
         score_text = self.font.render(f"Score: {self.score}", True, WHITE)
         screen.blit(score_text, (10, 10))
 
-        if self.game_over and not self._game_over_logged:
-            # NOTE: no proper game-over screen yet - see Task 2 in the README.
-            print("Game over! Final score:", self.score)
-            self._game_over_logged = True
+        if self.game_over:
+            overlay = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+            overlay.fill((0, 0, 0, 195))
+            screen.blit(overlay, (0, 0))
+            title = "You won!" if len(self.snake.body) == self.grid_width * self.grid_height else "Game Over"
+            lines = [(title, self.font), (f"Final score: {self.score}", self.font),
+                     ("Press Q or Esc to exit", self.small_font)]
+            for index, (text, font) in enumerate(lines):
+                label = font.render(text, True, WHITE)
+                screen.blit(label, label.get_rect(center=(self.width // 2, 235 + index * 45)))

@@ -30,6 +30,8 @@ def main():
             if event.type == pygame.KEYDOWN:
                 engine.handle_keydown(event.key)
 
+        if engine.quit_requested:
+            running = False
         engine.handle_input()
         engine.update()
         engine.render(SCREEN)

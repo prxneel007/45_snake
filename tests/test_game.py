@@ -57,5 +57,17 @@ class GameTests(unittest.TestCase):
         self.assertEqual(len(engine.snake.body), 4)
         self.assertNotIn((engine.food.x, engine.food.y), engine.snake.body)
 
+    def test_game_over_waits_and_quits(self):
+        engine = GameEngine(600, 600)
+        engine.snake.body = [(29, 5), (28, 5), (27, 5)]
+        for _ in range(7): engine.update()
+        self.assertTrue(engine.game_over)
+        body = engine.snake.body.copy()
+        for _ in range(30): engine.update()
+        self.assertEqual(body, engine.snake.body)
+        engine.render(pygame.display.get_surface())
+        engine.handle_keydown(pygame.K_q)
+        self.assertTrue(engine.quit_requested)
+
 if __name__ == '__main__':
     unittest.main()
